@@ -66,22 +66,24 @@ def decode_qdatetime_iso8601str(stream):
         log.debug("offset: %s", offset)
         raise wsjtDecoderException("unable to deal with QDateTime objects with timespec=2 (offset={}).".format(offset))
             
-    gregorian_datetime = convertdate.julianday.to_gregorian(julian_days)
+    gregorian_datetime = convertdate.julianday.to_datetime(julian_days)
 
     # Apparently this is always noon. since the QTime is milliseconds since midnight, if we add it to the 
     # gregorgian_date the resulting timestamp will be off by 12 hours every time.
     # Instead, we recreate the date with starting point at midnight and add milliseconds to it.  This is safe
     # because julian_days will always be an integer and never fractions of a day.
-    combined_datetime = datetime.datetime(gregorian_datetime.year, gregorian_datetime.month, gregorian_datetime.day,0,0) + datetime.timedelta(milliseconds=msecs_since_midnight)
+    combined_datetime = datetime.datetime(
+        gregorian_datetime.year, gregorian_datetime.month,
+        gregorian_datetime.day,0,0) + datetime.timedelta(milliseconds=msecs_since_midnight)
     iso8601_datetime = combined_datetime.isoformat() + 'Z'
 
-    log.debug("julian_days: %s", julian_days)
-    log.debug("msecs_since_midnight: %s", msecs_since_midnight)
-    log.debug("timespec: %s", timespec)
-    log.debug("gregorian_datetime: %s", gregorian_datetime)
-    log.debug("combined_datetime: %s", combined_datetime)
-    log.debug("combined_datetime.isoformat()Z:  %s", iso8601_datetime)
-    log.debug("iso8601_datetime:  %s", iso8601_datetime)
+    #log.debug("julian_days: %s", julian_days)
+    #log.debug("msecs_since_midnight: %s", msecs_since_midnight)
+    #log.debug("timespec: %s", timespec)
+    #log.debug("gregorian_datetime: %s", gregorian_datetime)
+    #log.debug("combined_datetime: %s", combined_datetime)
+    #log.debug("combined_datetime.isoformat()Z:  %s", iso8601_datetime)
+    #log.debug("iso8601_datetime:  %s", iso8601_datetime)
     
     return iso8601_datetime
 
@@ -108,7 +110,7 @@ wsjt_msg_type = {
 # taken in a stream of bytes
 def decode_message(data: bytes, source_addr: str):
     
-    log.debug("source: %s", source_addr)
+    #log.debug("source: %s", source_addr)
     
     buffer = QByteArray(data)
     stream = QDataStream(buffer)
@@ -127,8 +129,8 @@ def decode_message(data: bytes, source_addr: str):
     # if we got here, we know we have something that looks like the message we're expecting from WSJT-X
     message_type = stream.readUInt32()
     id = decode_utf8_str(stream)
-    log.debug("id: %s", id)
-    log.debug("message_type: %d ", message_type)
+    #log.debug("id: %s", id)
+    #log.debug("message_type: %d ", message_type)
       
     match message_type:
          
