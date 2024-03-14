@@ -44,18 +44,8 @@ def decode_utf8_str(stream):
         bytes = stream.readRawData(len)
         return bytes.decode("utf-8)")
 
-# decode qtime (milliseconds since midnight UTC) into an ISO 8601 timestamp string
-def decode_qtime_iso8601str(stream):
-    utcnow = datetime.datetime.now(datetime.UTC)
-    utcmidnight = datetime.datetime(utcnow.year, utcnow.month, utcnow.day, 0, 0)
-    msecs_since_midnight = stream.readUInt32()
-    timestamp = utcmidnight + datetime.timedelta(milliseconds=msecs_since_midnight)
-    iso8601_timestamp = timestamp.isoformat() + 'Z'
-    log.debug("iso8601_timestamp: %s", iso8601_timestamp)
-    return iso8601_timestamp
-
 # decode qdatetime into an ISO 8601 timestamp string
-def decode_qdatetime_iso8601str(stream):
+def decode_qdatetime(stream):
     julian_days = stream.readInt64() # QDate
     msecs_since_midnight = stream.readUInt32()
     timespec = stream.readUInt8()
@@ -75,7 +65,7 @@ def decode_qdatetime_iso8601str(stream):
     combined_datetime = datetime.datetime(
         gregorian_datetime.year, gregorian_datetime.month,
         gregorian_datetime.day,0,0) + datetime.timedelta(milliseconds=msecs_since_midnight)
-    iso8601_datetime = combined_datetime.isoformat() + 'Z'
+    dt = combined_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     #log.debug("julian_days: %s", julian_days)
     #log.debug("msecs_since_midnight: %s", msecs_since_midnight)
@@ -85,7 +75,7 @@ def decode_qdatetime_iso8601str(stream):
     #log.debug("combined_datetime.isoformat()Z:  %s", iso8601_datetime)
     #log.debug("iso8601_datetime:  %s", iso8601_datetime)
     
-    return iso8601_datetime
+    return dt
 
 # dict of WSJT-X message type codes
 wsjt_msg_type = {
@@ -136,7 +126,7 @@ def decode_message(data: bytes, source_addr: str):
          
         case 5: # QSO logged
             qso = wsjt_qso.WsjtQso();
-            qso.datetime_off = decode_qdatetime_iso8601str(stream)
+            qso.datetime_off = decode_qdatetime(stream)
             qso.dx_call = decode_utf8_str(stream)
             qso.dx_grid = decode_utf8_str(stream)
             qso.tx_freq = stream.readUInt64()
@@ -146,7 +136,7 @@ def decode_message(data: bytes, source_addr: str):
             qso.tx_power = decode_utf8_str(stream)
             qso.comments = decode_utf8_str(stream)
             qso.name = decode_utf8_str(stream)
-            qso.datetime_on = decode_qdatetime_iso8601str(stream)
+            qso.datetime_on = decode_qdatetime(stream)
             qso.op_call = decode_utf8_str(stream)
             qso.de_call = decode_utf8_str(stream)
             qso.de_grid = decode_utf8_str(stream)
@@ -155,8 +145,8 @@ def decode_message(data: bytes, source_addr: str):
             qso.adif_prop_mode = decode_utf8_str(stream)
 
         case _:
-            log.debug("ignored message type %d (%s)", 
-                      message_type, wsjt_msg_type[message_type])
+            #log.debug("ignored message type %d (%s)", 
+            #          message_type, wsjt_msg_type[message_type])
             qso = None
 
     return qso

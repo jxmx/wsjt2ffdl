@@ -28,6 +28,10 @@ class WsjtQso:
         self.exch_sent = str()
         self.exch_rcvd = str()
         self.adif_prop_mode = str()
+        self.arrl_class = None
+        self.section = None
+        self.band = None
+        self.qkey = None
 
 class WsjtQsoException(Exception):
     """ exception for WsjtQso """

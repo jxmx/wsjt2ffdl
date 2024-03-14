@@ -5,6 +5,7 @@
 import logging
 import pprint
 import re
+import requests
 import socketserver
 from . import wsjt_decoder, wsjt_qso
 
@@ -22,21 +23,65 @@ class WsjtHandler(socketserver.BaseRequestHandler):
         if r != None:
             log.debug(f"call: {r.dx_call}")
             log.debug(f"logclock: {r.datetime_on}")
-            rband = self.xfreq_to_band(r.tx_freq)
-            log.debug(f"band: {rband}")
+            r.band = self.__xfreq_to_band(r.tx_freq)
+            log.debug(f"band: {r.band}")
             log.debug(f"exch_rcvd: {r.exch_rcvd}")
-            rclass , rsect = re.split(r"\s+", r.exch_rcvd)
-            log.debug(f"opclass: {rclass}")
+            r.arrl_class , r.section = re.split(r"\s+", r.exch_rcvd)
+            log.debug(f"opclass: {r.arrl_class}")
             r.mode = "DATA"
             log.debug(f"mode: {r.mode}")
             log.debug(f"callsign: {r.de_call}")
-            log.debug(f"section: {rsect}")
+            log.debug(f"section: {r.section}")
 
             if r.op_call is None or r.op_call == "":
-                r.op_call = r.dx_call
+                r.op_call = r.de_call
             log.debug(f"operator: {r.op_call}")
+            r.qkey = self.__gen_qkey(r.dx_call, r.band, r.mode)
+            log.debug(f"qkey: {r.qkey}")
             
-    def xfreq_to_band(self, freq: int):
+            stored = self.__post_qso(r)
+            if not stored:
+                log.error("Failed to post qkey: %s", r.qkey)
+                return False
+            
+            return True
+
+    def __post_qso(self, r: wsjt_qso.WsjtQso):
+        url = "http://dev3.mfamily.org/api/storeqso.php"
+        post = {
+            "qkey" : r.qkey,
+            "logclock" : r.datetime_on,
+            "call" : r.dx_call,
+            "opclass" : r.arrl_class,
+            "section" : r.section,
+            "opcallsign" : r.op_call,
+            "opoperator" : r.de_call,
+            "opband" : r.band,
+            "opmode" : r.mode
+        }
+
+        try:
+            resp = requests.post(url, post)
+            
+            if resp.status_code != 200:
+                log.error("Failed to POST with HTTP status: %d", resp.status_code)
+                log.error("Output (if any): %s", resp.text)
+        
+            if re.search(r"^OK", resp.text):
+                    log.info("Logged: %s", r.qkey)
+                    return True
+        except Exception as e:    
+            log.error(e)
+            return False 
+        
+        return False
+
+    def __gen_qkey(self, call: str, band: str, mode: str):
+        call = call.upper()
+        band = band.upper()
+        return f"{call}{band}{mode}"
+            
+    def __xfreq_to_band(self, freq: int):
         if freq >= 1800000 and freq <= 2000000:
             return "160M"
         if freq >= 3500000 and freq <= 4000000:
