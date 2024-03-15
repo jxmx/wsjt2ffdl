@@ -26,12 +26,20 @@ class WsjtHandler(socketserver.BaseRequestHandler):
             r.band = self.__xfreq_to_band(r.tx_freq)
             log.debug(f"band: {r.band}")
             log.debug(f"exch_rcvd: {r.exch_rcvd}")
-            r.arrl_class , r.section = re.split(r"\s+", r.exch_rcvd)
-            log.debug(f"opclass: {r.arrl_class}")
+
+            try:
+                r.arrl_class , r.section = re.split(r"\s+", r.exch_rcvd)
+                log.debug(f"opclass: {r.arrl_class}")
+                log.debug(f"section: {r.section}")
+            except ValueError as e:
+                log.error("improper exchange data for FD from WSJT-X: %s", r.exch_rcvd)
+                log.error("ValueError was %s", e)
+                return False
+                        
             r.mode = "DATA"
             log.debug(f"mode: {r.mode}")
             log.debug(f"callsign: {r.de_call}")
-            log.debug(f"section: {r.section}")
+            
 
             if r.op_call is None or r.op_call == "":
                 r.op_call = r.de_call
@@ -68,8 +76,13 @@ class WsjtHandler(socketserver.BaseRequestHandler):
                 log.error("Output (if any): %s", resp.text)
         
             if re.search(r"^OK", resp.text):
-                    log.info("Logged: %s", r.qkey)
-                    return True
+                log.info("Logged: %s", r.qkey)
+                return True
+
+            if re.search(r"^ERROR", resp.text):
+                log.error("Server Error: %s", resp.text)
+                return False
+
         except Exception as e:    
             log.error(e)
             return False 
