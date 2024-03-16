@@ -33,7 +33,7 @@ ap.add_argument("--version", help="get the version of the software", action="ver
 args = ap.parse_args()
 
 # Setup Logging
-log = logging.getLogger("wjst2ffdl-listener")
+log = logging.getLogger("wsjt2ffdl-listener")
 lh = logging.StreamHandler()
 lf = logging.Formatter(fmt="%(levelname)s: (%(name)s) %(message)s")
 lh.setFormatter(lf)

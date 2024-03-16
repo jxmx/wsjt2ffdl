@@ -1,0 +1,16 @@
+Source: wsjt2ffdl
+Section: Utilities
+Priority: optional
+Maintainer: Jason McCormick <jason@mfamily.org>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.5.1
+Homepage: https://github.com/jxmx/wsjt2ffdl/
+Vcs-Browser: https://github.com/jxmx/wsjt2ffdl/
+Vcs-Git: https://github.com/jxmx/wsjt2ffdl/
+Rules-Requires-Root: binary-targets
+
+Package: wsjt2ffdl
+Architecture: all
+Depends: ${misc:Depends}, python3, python3-pyqt5, adduser
+Description: Listens for QSOs for WSJT-X and records to Firefly Field Day Logger
+  Used with the Firefly Field Day Logger application

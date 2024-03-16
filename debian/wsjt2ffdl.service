@@ -1,0 +1,14 @@
+[Unit]
+Description=WSJT-X to Firefly Field Day Integrator
+After=network.target
+
+[Service]
+Type=exec
+User=wsjt2ffdl
+Group=wsjt2ffdl
+Environment="PATH=/usr/bin:/bin:/usr/sbin:/sbin"
+ExecStart=wsjt2ffdl-listener 224.0.0.1
+
+[Install]
+WantedBy=multi-user.target
+
