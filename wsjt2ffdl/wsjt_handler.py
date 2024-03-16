@@ -55,7 +55,6 @@ class WsjtHandler(socketserver.BaseRequestHandler):
             return True
 
     def __post_qso(self, r: wsjt_qso.WsjtQso):
-        url = "http://dev3.mfamily.org/api/storeqso.php"
         post = {
             "qkey" : r.qkey,
             "logclock" : r.datetime_on,
@@ -69,7 +68,7 @@ class WsjtHandler(socketserver.BaseRequestHandler):
         }
 
         try:
-            resp = requests.post(url, post)
+            resp = requests.post(FFDL_URL, post)
             
             if resp.status_code != 200:
                 log.error("Failed to POST with HTTP status: %d", resp.status_code)

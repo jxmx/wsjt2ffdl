@@ -26,6 +26,7 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 # argparse
 ap = argparse.ArgumentParser(description="Listen for WSJT-X QSO messages and log them to FFDL")
 ap.add_argument("group", type=str, help="Multicast Group IP")
+ap.add_argument("url", type=str, help="URL to Firefly FDL API")
 ap.add_argument("--port", type=int, help="Multicast port (default 2237)", default=2237)
 ap.add_argument("--debug", help="enable debug-level logging output", action="store_true")
 ap.add_argument("--debugmodule", type=str, help="enable debugging only for module specified")
@@ -61,6 +62,10 @@ if __name__ == "__main__":
     listener.socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
     log.info(f"Server listening for {GROUP}:{PORT}")
+
+    FFDL_URL = args.url
+    log.info(f"Server publishing to {FFDL_URL}")
+
     try:
         listener.serve_forever()
     finally:
