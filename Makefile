@@ -15,6 +15,7 @@ exec_prefix ?= $(prefix)
 bin_prefix ?= $(exec_prefix)/bin
 pylibdir ?= $(exec_prefix)/lib/python3/dist-packages
 mandir ?= $(prefix)/share/man
+sysconfdir ?= /etc
 
 BINS = \
 	wsjt2ffdl-listener
@@ -26,7 +27,7 @@ PY_EXP = $(patsubst %, $(DESTDIR)$(pylibdir)/%, $(PY_SRC))
 default:
 	@echo This does nothing 
 
-install: $(BINS_EXP) $(PY_EXP)
+install: $(BINS_EXP) $(PY_EXP) 
 
 $(DESTDIR)$(bin_prefix)/%:  %
 	install -D -m 0755 $< $@

@@ -7,7 +7,8 @@ Type=exec
 User=wsjt2ffdl
 Group=wsjt2ffdl
 Environment="PATH=/usr/bin:/bin:/usr/sbin:/sbin"
-ExecStart=wsjt2ffdl-listener 224.0.0.1
+EnvironmentFile=-/etc/default/wsjt2ffdl
+ExecStart=wsjt2ffdl-listener $OPTS --port $MGPT $MGIP $APIURL
 
 [Install]
 WantedBy=multi-user.target
