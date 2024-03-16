@@ -59,7 +59,8 @@ debclean:
 	rm -rf debian/.debhelper/
 	rm -f debian/debhelper-build-stamp
 	rm -f debian/*.substvars
-	rm -rf debian/mfamily-scripts/ debian/.debhelper/
-	rm -f debian/debhelper-build-stamp debian/files debian/mfamily-scripts.substvars
+	rm -rf debian/wsjt2ffdl/ debian/.debhelper/
+	rm -f debian/debhelper-build-stamp debian/files debian/wsjt2ffdl.substvars
+	rm -f debian/wsjt2ffdl.postrm.debhelper
 
 	
