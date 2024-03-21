@@ -7,9 +7,28 @@ as described in the "WSJT-X" section of
 Ignore the part about HRD configuration.
 
 ## Installation
-This is as simple as installing the package. The application will
-automatically start and will listen on the default multicast group
-224.0.0.1 port 2237.
+Installation is supported on in-support versions of Debian (currently
+Debian 12 Bookworm and Debial 11 Bullseye) only and only
+ through use of apt/deb and the PacketWarriors software repository. 
+Installation on a supported Debian release is as follows.
+
+1. Install the PacketWarriors software repository if not already
+installed for Firefly Logger (i.e. running wsjt2ffdl on a different
+system):
+```
+wget -O/packetwarriors-repo.deb https://repo.packetwarriors.com/packetwarriors-repo.deb
+dpkg -i /tmp/packetwarriors-repo.deb
+apt update
+```
+
+2. Install with apt:
+```
+apt install wsjt2ffdl
+```
+
+Upon installation, wsjt2ffdl will be started and enabled to start
+on boot. Standard setups should require no additional configuration
+beyond the configuration of WSJT-X.
 
 ## Configuration
 For non-standard configurations, the file `/etc/default/wsjt2ffdl`
