@@ -3,8 +3,8 @@
 #
 SRCNAME = wsjt2ffdl
 PKGNAME = $(SRCNAME)
-RELVER = 1.0
-DEBVER = 2
+RELVER = 1.1
+DEBVER = 1
 
 ifdef ${DESTDIR}
 DESTDIR=${DESTDIR}
