@@ -5,6 +5,9 @@ SRCNAME = wsjt2ffdl
 PKGNAME = $(SRCNAME)
 RELVER = 1.1
 DEBVER = 1
+ifndef ${RELPLAT}
+RELPLAT = deb$(shell lsb_release -rs 2> /dev/null)
+endif
 
 ifdef ${DESTDIR}
 DESTDIR=${DESTDIR}
@@ -36,7 +39,11 @@ $(DESTDIR)$(pylibdir)/%:	%
 	install -D -m 0644 $< $@
 
 deb:	debclean debprep
+	debchange --distribution stable --package $(PKGNAME) \
+		--newversion $(RELVER)-$(DEBVER).$(RELPLAT) "Autobuild of $(RELVER)-$(DEBVER) for $(RELPLAT)"
 	debuild
+	git checkout debian/changelog
+
 
 debchange:
 	debchange -v $(RELVER)-$(DEBVER)
