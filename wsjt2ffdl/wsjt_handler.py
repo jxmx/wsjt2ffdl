@@ -6,11 +6,14 @@ import logging
 import pprint
 import re
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import socketserver
 from . import wsjt_decoder, wsjt_qso
 
 __BUILD_ID = "@@HEAD-DEVELOP@@"
 log = logging.getLogger(__name__)
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class WsjtHandler(socketserver.BaseRequestHandler):
     """ handler class for the UDP server """
@@ -68,7 +71,7 @@ class WsjtHandler(socketserver.BaseRequestHandler):
         }
 
         try:
-            resp = requests.post(FFDL_URL, post)
+            resp = requests.post(self.server.ffdl_url, data=post, verify=False)
             
             if resp.status_code != 200:
                 log.error("Failed to POST with HTTP status: %d", resp.status_code)

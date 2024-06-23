@@ -53,6 +53,9 @@ else:
     log.setLevel(logging.INFO)
     mlog.setLevel(logging.INFO)
 
+FFDL_URL = args.url
+log.info(f"Server publishing to {FFDL_URL}")
+
 if __name__ == "__main__":
     HOST, PORT = "0.0.0.0", args.port
     GROUP = args.group
@@ -60,11 +63,9 @@ if __name__ == "__main__":
     listener.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mreq = socket.inet_aton(GROUP) + socket.inet_aton('0.0.0.0')
     listener.socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+    listener.ffdl_url = FFDL_URL
 
     log.info(f"Server listening for {GROUP}:{PORT}")
-
-    FFDL_URL = args.url
-    log.info(f"Server publishing to {FFDL_URL}")
 
     try:
         listener.serve_forever()
