@@ -1,10 +1,17 @@
-wsjt2ffdl (1.1-1) unstable; urgency=medium
+wsjt2ffdl (1.2-1) stable; urgency=medium
+
+  * (Re)add missing RAC 'GH' section
+  * Fix POST issue with global URL variable  
+
+ -- Jason McCormick <jason@mfamily.org>  Sun, 23 Jun 2024 13:23:51 -0400
+
+wsjt2ffdl (1.1-1) stable; urgency=medium
 
   * Fixed race condition for initial boot time 
 
  -- Jason McCormick <jason@mfamily.org>  Sat, 23 Mar 2024 15:06:00 -0400
 
-wsjt2ffdl (1.0-2) unstable; urgency=medium
+wsjt2ffdl (1.0-2) stable; urgency=medium
 
   * Initial release
 
