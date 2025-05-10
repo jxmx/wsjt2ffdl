@@ -1,3 +1,9 @@
+wsjt2ffdl (1.3-1) stable; urgency=medium
+
+  * Prep for 2025 appliance
+
+ -- Jason McCormick <jason@mfamily.org>  Sat, 10 May 2025 11:06:02 -0400
+
 wsjt2ffdl (1.2-1) stable; urgency=medium
 
   * (Re)add missing RAC 'GH' section

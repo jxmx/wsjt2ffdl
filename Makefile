@@ -3,7 +3,7 @@
 #
 SRCNAME = wsjt2ffdl
 PKGNAME = $(SRCNAME)
-RELVER = 1.2
+RELVER = 1.3
 DEBVER = 1
 ifndef ${RELPLAT}
 RELPLAT = deb$(shell lsb_release -rs 2> /dev/null)
