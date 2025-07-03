@@ -1,3 +1,6 @@
+## Code Moved
+This code was moved into [Firefly Logger](https://github.com/jxmx/firefly-logger) directly.
+
 # WSJT2FFDL
 This utility listens for multicasted QSO log events from WSJT-X
 and publishes them to the [Firefly Field Day Logger](https://github.com/jxmx/ffdl).
