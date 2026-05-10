@@ -1,3 +1,6 @@
+> [!WARNING]
+> This software with merged into the main Firefly Logger package in v26
+
 # WSJT2FFDL
 This utility listens for multicasted QSO log events from WSJT-X
 and publishes them to the [Firefly Field Day Logger](https://github.com/jxmx/ffdl).
